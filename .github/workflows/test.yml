@@ -37,13 +37,10 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: 'Generate key and update the test time'
+      - name: 'Generate key'
         run: |
-          ACCOUNT=0
-          KEY=${{ github.event.inputs.keys }}
-          SMALL_BUSINESS_KEY=0
-          VPN=0
           EMAIL_API="${{ github.event.inputs.mail }}"
+          KEY=${{ github.event.inputs.keys }}
           if [ -z "$EMAIL_API" ]; then
             EMAIL_API="emailfake"
           fi
@@ -58,38 +55,12 @@ jobs:
           source venv/bin/activate
           pip install -r requirements.txt
           echo "Test results:" >> $GITHUB_STEP_SUMMARY
-          if [[ ${ACCOUNT} != 0 ]]
-          then
-          for ((attempt=1;attempt<=${ACCOUNT};++attempt))
-          do
-          python3 main.py --auto-detect-browser --account --email-api ${EMAIL_API} --skip-update-check --no-logo --disable-progress-bar --disable-logging
-          done
-          echo -e "\nAccounts generated:" >> $GITHUB_STEP_SUMMARY
-          cat ./*ACCOUNTS.txt >> $GITHUB_STEP_SUMMARY
-          fi
           if [[ ${KEY} != 0 ]]
           then
           for ((attempt=1;attempt<=${KEY};++attempt))
           do
           python3 main.py --auto-detect-browser --key --email-api ${EMAIL_API} --skip-update-check --no-logo --disable-progress-bar --disable-logging
           done
-          fi
-          if [[ ${SMALL_BUSINESS_KEY} != 0 ]]
-          then
-          for ((attempt=1;attempt<=${SMALL_BUSINESS_KEY};++attempt))
-          do
-          python3 main.py --auto-detect-browser --small-business-key --email-api ${EMAIL_API} --skip-update-check --no-logo --disable-progress-bar --disable-logging
-          done
-          fi
-          if [[ ${VPN} != 0 ]]
-          then
-          for ((attempt=1;attempt<=${VPN};++attempt))
-          do
-          python3 main.py --auto-detect-browser --vpn-codes --email-api ${EMAIL_API} --skip-update-check --no-logo --disable-progress-bar --disable-logging
-          done
-          fi
-          if [[ ${KEY} != 0 || ${SMALL_BUSINESS_KEY} != 0 || ${VPN} != 0 ]]
-          then
           echo -e "\nKeys generated:" >> $GITHUB_STEP_SUMMARY
           cat ./*KEYS.txt >> $GITHUB_STEP_SUMMARY
           fi
@@ -99,12 +70,4 @@ jobs:
             --header "Authorization: Bearer $API_TOKEN" \
             --data-urlencode "cles=$KEYS"
           cd ${{ github.workspace }}
-          #sed -i 's/\(last_test-\)[0-9]\{2\}.[0-9]\{2\}.[0-9]\{4\}_[0-9]\{2\}:[0-9]\{2\}_UTC+3/\1'"$(date -u --date='3 hours' +"%d.%m.%Y_%H:%M_UTC+3")"'/' README.md
           sudo rm -r etkg
-#          git pull
-#          git commit -m "Update test time" -a
-#      - name: Push changes to the repo
-#        uses: ad-m/github-push-action@master
-#        with:
-#          github_token: ${{ secrets.PAT }}
-#          branch: ${{ github.ref }}

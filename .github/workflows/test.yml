@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       mail:
-        description: 'Fournisseur de messagerie'
+        description: 'Choose the mail provider to generate license'
         required: true
         type: choice
         options:
@@ -21,7 +21,7 @@ on:
         - emailfake
         default: fakemail
       keys:
-        description: 'Nombre de clés à générer'
+        description: 'Number of keys to be generated'
         required: true
         type: number
         default: 3

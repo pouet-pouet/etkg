@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       mail:
-        description: 'Choose the mail provider'
+        description: 'Fournisseur de messagerie'
         required: true
         type: choice
         options:
@@ -20,6 +20,11 @@ on:
         - incognitomail
         - emailfake
         default: fakemail
+      keys:
+        description: 'Nombre de clés à générer'
+        required: true
+        type: number
+        default: 3
 jobs:
   Test:
     runs-on: ubuntu-latest
@@ -35,7 +40,7 @@ jobs:
       - name: 'Generate key and update the test time'
         run: |
           ACCOUNT=0
-          KEY=3
+          KEY=${{ github.event.inputs.keys }}
           SMALL_BUSINESS_KEY=0
           VPN=0
           EMAIL_API="${{ github.event.inputs.mail }}"

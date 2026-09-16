@@ -20,7 +20,7 @@ on:
         - incognitomail
         - emailfake
         default: fakemail
-      keys:
+      key:
         description: 'Number of keys to be generated'
         required: true
         type: number
@@ -40,9 +40,12 @@ jobs:
       - name: 'Generate key'
         run: |
           EMAIL_API="${{ github.event.inputs.mail }}"
-          KEY=${{ github.event.inputs.keys }}
+          KEY="${{ github.event.inputs.key }}"
           if [ -z "$EMAIL_API" ]; then
-            EMAIL_API="emailfake"
+            EMAIL_API="fakemail"
+          fi
+          if [ -z "$KEY" ]; then
+            KEY=3
           fi
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"

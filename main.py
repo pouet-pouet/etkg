@@ -630,8 +630,10 @@ def main(disable_exit=False):
             # end
             # logging
             if output_line:
-                logging.info(output_line)
-                console_log(output_line)
+                #logging.info(output_line)
+                #console_log(output_line)
+                logging.info(re.sub(r'([A-Z0-9]{4})-([A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4})-([A-Z0-9]{4})', r'\1-****-****-****-\3', output_line))
+                console_log(re.sub(r'([A-Z0-9]{4})-([A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4})-([A-Z0-9]{4})', r'\1-****-****-****-\3', output_line))
 
                 if not args['disable_output_file']:
                     out_file = args['output_file']
